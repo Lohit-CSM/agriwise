@@ -1,0 +1,6 @@
+{
+  "name": "AgriWise",
+  "description": "AI-Powered Agricultural Market Linkage and Price Discovery Platform - From Farm Supply to Global Demand (SIH 2026)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
