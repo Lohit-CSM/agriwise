@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.AgriRepository
 import com.example.ui.components.IndicativeDisclaimerBadge
 import com.example.ui.components.ProducePassportSummaryCard
+import com.example.ui.components.WeatherCard
 import com.example.ui.theme.*
 
 @Composable
@@ -30,6 +31,8 @@ fun DashboardScreen(
     onGlobalClick: () -> Unit,
     onExportReadinessClick: () -> Unit,
     onPassportClick: () -> Unit,
+    onAiChatbotClick: () -> Unit = {},
+    onCallSupportClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val currentLot by AgriRepository.currentLot.collectAsState()
@@ -49,7 +52,8 @@ fun DashboardScreen(
         // Welcome and User Header
         Card(
             colors = CardDefaults.cardColors(containerColor = AgriForestGreen),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(14.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
@@ -62,7 +66,7 @@ fun DashboardScreen(
                 Column {
                     Text(
                         text = "Namaste, ${currentUser.name}",
-                        fontSize = 16.sp,
+                        fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -88,7 +92,79 @@ fun DashboardScreen(
             }
         }
 
-        // Active Produce Lot
+        // 24/7 Farmer Call Support & AI Chatbot Action Bar
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Card(
+                onClick = onCallSupportClick,
+                colors = CardDefaults.cardColors(containerColor = AgriUltraLightGreen),
+                border = androidx.compose.foundation.BorderStroke(1.dp, AgriMintGreen),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(68.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Surface(
+                        color = AgriPrimaryGreen,
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(imageVector = Icons.Default.PhoneInTalk, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
+                        }
+                    }
+                    Column {
+                        Text(text = "24/7 Call Support", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = AgriDeepGreen)
+                        Text(text = "Kisan & AgriWise Helpline", fontSize = 10.sp, color = AgriTextSecondary)
+                    }
+                }
+            }
+
+            Card(
+                onClick = onAiChatbotClick,
+                colors = CardDefaults.cardColors(containerColor = AgriForestGreen),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(68.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Surface(
+                        color = AgriMintGreen,
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(imageVector = Icons.Default.SmartToy, contentDescription = null, tint = AgriDeepGreen, modifier = Modifier.size(20.dp))
+                        }
+                    }
+                    Column {
+                        Text(text = "Ask AI Chatbot", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        Text(text = "Prices, Buyers & Grading", fontSize = 10.sp, color = AgriLightGreen)
+                    }
+                }
+            }
+        }
+
+        // Live Microclimate Weather Card
+        WeatherCard()
+
+        // Active Produce Lot Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -115,7 +191,7 @@ fun DashboardScreen(
         // Key Value Metrics Banner
         Card(
             colors = CardDefaults.cardColors(containerColor = AgriSurface),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(14.dp),
             border = androidx.compose.foundation.BorderStroke(1.dp, AgriBorder),
             modifier = Modifier.fillMaxWidth()
         ) {

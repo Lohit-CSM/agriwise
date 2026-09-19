@@ -463,6 +463,7 @@ fun CreateLotScreen(
                             analysisMessage = "Finding compatible market opportunities..."
                             delay(700)
                             isAnalyzing = false
+                            com.example.data.WeatherRepository.updateLocationWeather(selectedDistrict, selectedState)
                             AgriRepository.submitNewLot(
                                 crop = selectedCrop,
                                 quantity = quantityTonnes,

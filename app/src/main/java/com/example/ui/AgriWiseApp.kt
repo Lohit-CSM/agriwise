@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.AgriRepository
 import com.example.model.NotificationItem
+import com.example.ui.components.CallSupportDialog
 import com.example.ui.components.SihTopBanner
 import com.example.ui.screens.*
 import com.example.ui.theme.*
@@ -25,6 +26,7 @@ import com.example.ui.theme.*
 enum class AppDestination(val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
     LANDING("Welcome", Icons.Default.Home),
     DASHBOARD("Dashboard", Icons.Default.Dashboard),
+    AI_CHAT("AI Advisor", Icons.Default.SmartToy),
     CREATE_LOT("New Lot", Icons.Default.AddCircle),
     PRICE_DISCOVERY("Price Engine", Icons.Default.MonetizationOn),
     MARKETS("Markets", Icons.Default.Storefront),
@@ -49,6 +51,7 @@ fun AgriWiseApp() {
     var showLanguageMenu by remember { mutableStateOf(false) }
     var showSmsIvrDialog by remember { mutableStateOf(false) }
     var showAdminDialog by remember { mutableStateOf(false) }
+    var showCallSupportDialog by remember { mutableStateOf(false) }
     var showDemoToast by remember { mutableStateOf(false) }
 
     val unreadNotifsCount = notifications.count { it.isUnread }
@@ -109,6 +112,41 @@ fun AgriWiseApp() {
                         actionIconContentColor = Color.White
                     ),
                     actions = {
+                        // 24/7 Call Support Quick Action Button
+                        Button(
+                            onClick = { showCallSupportDialog = true },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = AgriGoldAccent,
+                                contentColor = Color(0xFF261A00)
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                            modifier = Modifier
+                                .height(32.dp)
+                                .padding(end = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PhoneInTalk,
+                                contentDescription = "24/7 Call Support",
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "24/7 Call",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
+
+                        // AI Chat Advisor Quick Action
+                        IconButton(onClick = { currentScreen = AppDestination.AI_CHAT }) {
+                            Icon(
+                                imageVector = Icons.Default.SmartToy,
+                                contentDescription = "AgriWise AI Chatbot",
+                                tint = AgriMintGreen
+                            )
+                        }
+
                         // Language Dropdown Selector
                         Box {
                             IconButton(onClick = { showLanguageMenu = true }) {
@@ -194,6 +232,7 @@ fun AgriWiseApp() {
             ) {
                 val navItems = listOf(
                     AppDestination.DASHBOARD,
+                    AppDestination.AI_CHAT,
                     AppDestination.PRICE_DISCOVERY,
                     AppDestination.MARKETS,
                     AppDestination.OFFERS,
@@ -215,7 +254,7 @@ fun AgriWiseApp() {
                         label = {
                             Text(
                                 text = dest.label,
-                                fontSize = 10.sp,
+                                fontSize = 9.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )
                         },
@@ -261,7 +300,16 @@ fun AgriWiseApp() {
                         onAggregationClick = { currentScreen = AppDestination.AGGREGATION },
                         onGlobalClick = { currentScreen = AppDestination.GLOBAL },
                         onExportReadinessClick = { currentScreen = AppDestination.EXPORT_READINESS },
-                        onPassportClick = { currentScreen = AppDestination.PASSPORT }
+                        onPassportClick = { currentScreen = AppDestination.PASSPORT },
+                        onAiChatbotClick = { currentScreen = AppDestination.AI_CHAT },
+                        onCallSupportClick = { showCallSupportDialog = true }
+                    )
+                }
+
+                AppDestination.AI_CHAT -> {
+                    AiChatbotScreen(
+                        onNavigateBack = { currentScreen = AppDestination.DASHBOARD },
+                        onCallSupportClick = { showCallSupportDialog = true }
                     )
                 }
 
@@ -343,6 +391,11 @@ fun AgriWiseApp() {
                 }
             }
         }
+    }
+
+    // Call Support Dialog
+    if (showCallSupportDialog) {
+        CallSupportDialog(onDismiss = { showCallSupportDialog = false })
     }
 
     // Notifications Dialog Sheet
